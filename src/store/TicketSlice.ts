@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { fetchSearchId, fetchTickets } from '../api/api';
-import { TicketsState, Checkbox, CheckboxId, FilterId, FILTER_ID, CHECKBOX_ID } from '../types/types';
+import { TicketsState, Checkbox, CheckboxId, FilterId, FILTER_ID, CHECKBOX_ID, Ticket, Segment } from '../types/types';
 
 export const fetchID = createAsyncThunk('tickets/fetchSearchId', async () => {
   return await fetchSearchId();
@@ -30,45 +30,55 @@ const initialState: TicketsState = {
   ],
 };
 
+const calculateTotalDuration = (ticket: Ticket) =>
+  ticket.segments.reduce((acc: number, segment: Segment) => acc + segment.duration, 0);
+
+const handleAllCheckbox = (state: TicketsState, filter: Checkbox) => {
+  if (filter.id === CHECKBOX_ID.ALL) {
+    state.checkboxes.forEach((f: Checkbox) => {
+      if (f.id !== CHECKBOX_ID.ALL) f.checked = filter.checked;
+    });
+  } else {
+    const allChecked = state.checkboxes.every((f: Checkbox) => f.id !== CHECKBOX_ID.ALL ? f.checked : true);
+    state.checkboxes.find((f: Checkbox) => f.id === CHECKBOX_ID.ALL)!.checked = allChecked;
+  }
+};
+
 const ticketsSlice = createSlice({
   name: 'tickets',
   initialState,
   reducers: {
-    showMoreTicket(state) {
+    showMoreTicket: (state) => {
       state.ticketsNum += 5;
     },
+
     toggleFilter: (state, action: PayloadAction<CheckboxId>) => {
-      const filter = state.checkboxes.find((filter: Checkbox) => filter.id === action.payload);
+      const filter = state.checkboxes.find((f: Checkbox) => f.id === action.payload);
       if (filter) {
         filter.checked = !filter.checked;
-        if (filter.id === CHECKBOX_ID.ALL) {
-          state.checkboxes.forEach((f: Checkbox) => (f.id !== CHECKBOX_ID.ALL ? (f.checked = filter.checked) : null));
-        } else {
-          const allChecked = state.checkboxes.every((f: Checkbox) => (f.id !== CHECKBOX_ID.ALL ? f.checked : true));
-          state.checkboxes.find((f: Checkbox) => f.id === CHECKBOX_ID.ALL)!.checked = allChecked;
-        }
+        handleAllCheckbox(state, filter);
       }
     },
+
     setActiveFilterTab: (state, action: PayloadAction<FilterId>) => {
-      state.filterTabs.forEach((button) => (button.active = button.id === action.payload));
-    },
-    sortByPrice: (state) => {
-      state.tickets = [...state.tickets].sort((a, b) => a.price - b.price);
-    },
-    sortByDuration: (state) => {
-      state.tickets = [...state.tickets].sort((a, b) => {
-        const totalDurationA = a.segments.reduce((acc, segment) => acc + segment.duration, 0);
-        const totalDurationB = b.segments.reduce((acc, segment) => acc + segment.duration, 0);
-        return totalDurationA - totalDurationB;
+      state.filterTabs.forEach((button) => {
+        button.active = button.id === action.payload;
       });
     },
+
+    sortByPrice: (state) => {
+      state.tickets.sort((a, b) => a.price - b.price);
+    },
+
+    sortByDuration: (state) => {
+      state.tickets.sort((a, b) => calculateTotalDuration(a) - calculateTotalDuration(b));
+    },
+
     sortByOptimal: (state) => {
-      state.tickets = [...state.tickets].sort((a, b) => {
-        const totalDurationA = a.segments.reduce((acc, segment) => acc + segment.duration, 0);
-        const totalDurationB = b.segments.reduce((acc, segment) => acc + segment.duration, 0);
-        const optimalA = a.price * totalDurationA;
-        const optimalB = b.price * totalDurationB;
-        return optimalA - optimalB;
+      state.tickets.sort((a, b) => {
+        const durationA = calculateTotalDuration(a);
+        const durationB = calculateTotalDuration(b);
+        return a.price * durationA - b.price * durationB;
       });
     },
   },
