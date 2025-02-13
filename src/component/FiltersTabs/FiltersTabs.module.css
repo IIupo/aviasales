@@ -1,0 +1,17 @@
+.active {
+    background-color: rgba(33, 150, 243, 1);
+    color: white;
+}
+
+.filterButtons {
+    padding-left: 20px;
+}
+
+button {
+    background: rgba(255, 255, 255, 1);
+    color: rgba(74, 74, 74, 1);
+    height: 50px;
+    width: 170px;
+    border: 1px solid rgba(160, 176, 185, 1);
+    cursor: pointer;
+}

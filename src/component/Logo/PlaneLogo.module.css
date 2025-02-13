@@ -1,0 +1,7 @@
+.header {
+    width: 100vw;
+    height: 160px;
+    background-image: url("src/component/Logo/Logo.png");
+    background-repeat: no-repeat;
+    background-position: center;
+}
