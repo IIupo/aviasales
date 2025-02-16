@@ -22,6 +22,7 @@ export interface Ticket {
   }
 
   export enum FILTER_ID {
+    ALL = 'ALL',
     CHEAPER = 'CHEAPER',
     FASTER = 'FASTER',
     OPTIMAL = 'OPTIMAL',
@@ -36,6 +37,7 @@ export interface Ticket {
   }
   
   export const FILTER_TABS_LABELS = {
+    [FILTER_ID.ALL]: 'ALL',
     [FILTER_ID.CHEAPER]: 'Самые дешёвые',
     [FILTER_ID.FASTER]: 'Самые быстрые',
     [FILTER_ID.OPTIMAL]: 'Оптимальные',

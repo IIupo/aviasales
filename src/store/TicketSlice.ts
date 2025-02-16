@@ -17,7 +17,7 @@ const initialState: TicketsState = {
   status: false,
   stop: false,
   ticketsNum: 5,
-  activeFilterTab: FILTER_ID.CHEAPER,
+  activeFilterTab: FILTER_ID.ALL,
   activeCheckboxes: [CHECKBOX_ID.ALL],
 };
 

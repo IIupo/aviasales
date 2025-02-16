@@ -33,7 +33,7 @@ export const FilterTabs: React.FC = () => {
 
   return (
     <div className={styles.filterButtons}>
-      {Object.values(FILTER_ID).map((id) => (
+      {Object.values(FILTER_ID).map((id) => (id !== 'ALL') ? (
         <button
           key={id}
           onClick={() => handleFilterChange(id)}
@@ -41,7 +41,7 @@ export const FilterTabs: React.FC = () => {
         >
           {FILTER_TABS_LABELS[id].toUpperCase()}
         </button>
-      ))}
+      ):null)}
     </div>
   );
 };
