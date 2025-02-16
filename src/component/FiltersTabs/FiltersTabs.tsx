@@ -1,19 +1,19 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { 
-  setActiveFilterTab, 
+import {
+  setActiveFilterTab,
   sortByPrice,
   sortByDuration,
   sortByOptimal,
 } from '../../store/TicketSlice';
-import { TicketsState, FiltersTabs, FilterId, FILTER_ID } from '../../types/types';
+import { TicketsState, FILTER_ID, FILTER_TABS_LABELS } from '../../types/types';
 import styles from './FiltersTabs.module.css';
 
 export const FilterTabs: React.FC = () => {
   const dispatch = useDispatch();
-  const filterTabs = useSelector((state: { tickets: TicketsState }) => state.tickets.filterTabs);
+  const activeFilterTab = useSelector((state: { tickets: TicketsState }) => state.tickets.activeFilterTab);
 
-  const handleFilterChange = (filterType: FilterId) => {
+  const handleFilterChange = (filterType: FILTER_ID) => {
     dispatch(setActiveFilterTab(filterType));
 
     switch (filterType) {
@@ -26,21 +26,20 @@ export const FilterTabs: React.FC = () => {
       case FILTER_ID.OPTIMAL:
         dispatch(sortByOptimal());
         break;
-      default: 
-        dispatch(sortByPrice());
+      default:
         break;
     }
   };
 
   return (
     <div className={styles.filterButtons}>
-      {filterTabs.map((button: FiltersTabs) => (
+      {Object.values(FILTER_ID).map((id) => (
         <button
-          key={button.id}
-          onClick={() => handleFilterChange(button.id)}
-          className={button.active ? styles.active : styles.button}
+          key={id}
+          onClick={() => handleFilterChange(id)}
+          className={activeFilterTab === id ? styles.active : styles.button}
         >
-          {button.text.toUpperCase()}
+          {FILTER_TABS_LABELS[id].toUpperCase()}
         </button>
       ))}
     </div>

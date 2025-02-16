@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { fetchSearchId, fetchTickets } from '../api/api';
-import { TicketsState, Checkbox, CheckboxId, FilterId, FILTER_ID, CHECKBOX_ID, Ticket, Segment } from '../types/types';
+import { TicketsState, Ticket, Segment } from '../types/types';
+import { FILTER_ID, CHECKBOX_ID } from '../types/types';
 
 export const fetchID = createAsyncThunk('tickets/fetchSearchId', async () => {
   return await fetchSearchId();
@@ -16,31 +17,27 @@ const initialState: TicketsState = {
   status: false,
   stop: false,
   ticketsNum: 5,
-  filterTabs: [
-    { id: FILTER_ID.CHEAPER, text: 'Самые дешёвые', active: false },
-    { id: FILTER_ID.FASTER, text: 'Самые быстрые', active: false },
-    { id: FILTER_ID.OPTIMAL, text: 'Оптимальные', active: false },
-  ],
-  checkboxes: [
-    { id: CHECKBOX_ID.ALL, label: 'Все', checked: false },
-    { id: CHECKBOX_ID.NO_STOPS, label: 'Без пересадок', checked: false },
-    { id: CHECKBOX_ID.ONE_STOP, label: '1 пересадка', checked: false },
-    { id: CHECKBOX_ID.TWO_STOPS, label: '2 пересадки', checked: false },
-    { id: CHECKBOX_ID.THREE_STOPS, label: '3 пересадки', checked: false },
-  ],
+  activeFilterTab: FILTER_ID.CHEAPER,
+  activeCheckboxes: [CHECKBOX_ID.ALL],
 };
 
 const calculateTotalDuration = (ticket: Ticket) =>
   ticket.segments.reduce((acc: number, segment: Segment) => acc + segment.duration, 0);
 
-const handleAllCheckbox = (state: TicketsState, filter: Checkbox) => {
-  if (filter.id === CHECKBOX_ID.ALL) {
-    state.checkboxes.forEach((f: Checkbox) => {
-      if (f.id !== CHECKBOX_ID.ALL) f.checked = filter.checked;
-    });
+const handleAllCheckbox = (state: TicketsState, filter: CHECKBOX_ID) => {
+  if (filter === CHECKBOX_ID.ALL) {
+    if (state.activeCheckboxes.includes(CHECKBOX_ID.ALL)) {
+      state.activeCheckboxes = [CHECKBOX_ID.ALL];
+    } else {
+      state.activeCheckboxes = [];
+    }
   } else {
-    const allChecked = state.checkboxes.every((f: Checkbox) => f.id !== CHECKBOX_ID.ALL ? f.checked : true);
-    state.checkboxes.find((f: Checkbox) => f.id === CHECKBOX_ID.ALL)!.checked = allChecked;
+    state.activeCheckboxes = state.activeCheckboxes.filter(id => id !== CHECKBOX_ID.ALL);
+    if (state.activeCheckboxes.includes(filter)) {
+      state.activeCheckboxes = state.activeCheckboxes.filter(id => id !== filter);
+    } else {
+      state.activeCheckboxes.push(filter);
+    }
   }
 };
 
@@ -52,18 +49,12 @@ const ticketsSlice = createSlice({
       state.ticketsNum += 5;
     },
 
-    toggleFilter: (state, action: PayloadAction<CheckboxId>) => {
-      const filter = state.checkboxes.find((f: Checkbox) => f.id === action.payload);
-      if (filter) {
-        filter.checked = !filter.checked;
-        handleAllCheckbox(state, filter);
-      }
+    toggleFilter: (state, action: PayloadAction<CHECKBOX_ID>) => {
+      handleAllCheckbox(state, action.payload);
     },
 
-    setActiveFilterTab: (state, action: PayloadAction<FilterId>) => {
-      state.filterTabs.forEach((button) => {
-        button.active = button.id === action.payload;
-      });
+    setActiveFilterTab: (state, action: PayloadAction<FILTER_ID>) => {
+      state.activeFilterTab = action.payload;
     },
 
     sortByPrice: (state) => {

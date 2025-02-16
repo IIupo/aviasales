@@ -1,1 +1,1 @@
-export { Header } from './PlaneLogo';
+export { PlaneLogo } from './PlaneLogo';
