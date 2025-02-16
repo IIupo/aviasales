@@ -20,9 +20,9 @@ export const useFilter = (tickets: Ticket[], activeFilters: string[]) => {
         case 'THREE_STOPS':
           return 3;
         default:
-          return null;
+          return true;
       }
-    }).filter((filter): filter is StopCount => filter !== null);
+    })
 
     return stopsFilters.some(stops =>
       (stopsCountOnward === stops && stopsFilters.includes(stopsCountBackward)) ||
