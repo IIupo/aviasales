@@ -26,17 +26,19 @@ const calculateTotalDuration = (ticket: Ticket) =>
 
 const handleAllCheckbox = (state: TicketsState, filter: CHECKBOX_ID) => {
   if (filter === CHECKBOX_ID.ALL) {
-    if (state.activeCheckboxes.includes(CHECKBOX_ID.ALL)) {
+    if (!state.activeCheckboxes.includes(CHECKBOX_ID.ALL)) {
       state.activeCheckboxes = [CHECKBOX_ID.ALL];
-    } else {
-      state.activeCheckboxes = [];
     }
   } else {
     state.activeCheckboxes = state.activeCheckboxes.filter(id => id !== CHECKBOX_ID.ALL);
+
     if (state.activeCheckboxes.includes(filter)) {
       state.activeCheckboxes = state.activeCheckboxes.filter(id => id !== filter);
     } else {
       state.activeCheckboxes.push(filter);
+    }
+    if (state.activeCheckboxes.length === 0) {
+      state.activeCheckboxes = [CHECKBOX_ID.ALL];
     }
   }
 };
