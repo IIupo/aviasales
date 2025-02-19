@@ -1,19 +1,25 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  setActiveFilterTab,
-  sortByPrice,
-  sortByDuration,
-  sortByOptimal,
-} from '../../store/TicketSlice';
-import { TicketsState, FILTER_ID, FILTER_TABS_LABELS } from '../../types/types';
+import { setActiveFilterTab, sortByPrice, sortByDuration, sortByOptimal } from '../../store/TicketSlice';
+import { TicketsState, FILTER_ID, FilterId } from '../../types/types';
 import styles from './FiltersTabs.module.css';
+
+interface FilterButton {
+  filter: FilterId;
+  name: string;
+}
+
+const filterButtons: FilterButton[] = [
+  { filter: FILTER_ID.CHEAPER, name: 'Дешевле' },
+  { filter: FILTER_ID.FASTER, name: 'Быстрее' },
+  { filter: FILTER_ID.OPTIMAL, name: 'Оптимальные' },
+];
 
 export const FilterTabs: React.FC = () => {
   const dispatch = useDispatch();
   const activeFilterTab = useSelector((state: { tickets: TicketsState }) => state.tickets.activeFilterTab);
 
-  const handleFilterChange = (filterType: FILTER_ID) => {
+  const handleFilterChange = (filterType: FilterId) => {
     dispatch(setActiveFilterTab(filterType));
 
     switch (filterType) {
@@ -33,15 +39,15 @@ export const FilterTabs: React.FC = () => {
 
   return (
     <div className={styles.filterButtons}>
-      {Object.values(FILTER_ID).map((id) => (id !== 'ALL') ? (
+      {filterButtons.map(({ filter, name }) => (
         <button
-          key={id}
-          onClick={() => handleFilterChange(id)}
-          className={activeFilterTab === id ? styles.active : styles.button}
+          key={filter}
+          onClick={() => handleFilterChange(filter)}
+          className={activeFilterTab === filter ? styles.active : styles.button}
         >
-          {FILTER_TABS_LABELS[id].toUpperCase()}
+          {name.toUpperCase()}
         </button>
-      ):null)}
+      ))}
     </div>
   );
 };

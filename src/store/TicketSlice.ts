@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { fetchSearchId, fetchTickets } from '../api/api';
 import { TicketsState, Ticket, Segment } from '../types/types';
-import { FILTER_ID, CHECKBOX_ID } from '../types/types';
-
+import { CHECKBOX_ID, CheckboxId, FilterId } from '../types/types';
+import { initialState } from './types';
 export const fetchID = createAsyncThunk('tickets/fetchSearchId', async () => {
   return await fetchSearchId();
 });
@@ -11,20 +11,10 @@ export const fetchTicketsAsync = createAsyncThunk('tickets/fetchTickets', async 
   return await fetchTickets(searchId);
 });
 
-const initialState: TicketsState = {
-  tickets: [],
-  searchId: null,
-  status: false,
-  stop: false,
-  ticketsNum: 5,
-  activeFilterTab: FILTER_ID.ALL,
-  activeCheckboxes: [CHECKBOX_ID.ALL],
-};
-
 const calculateTotalDuration = (ticket: Ticket) =>
   ticket.segments.reduce((acc: number, segment: Segment) => acc + segment.duration, 0);
 
-const handleAllCheckbox = (state: TicketsState, filter: CHECKBOX_ID) => {
+const handleAllCheckbox = (state: TicketsState, filter: CheckboxId) => {
   if (filter === CHECKBOX_ID.ALL) {
     if (!state.activeCheckboxes.includes(CHECKBOX_ID.ALL)) {
       state.activeCheckboxes = [CHECKBOX_ID.ALL];
@@ -51,11 +41,11 @@ const ticketsSlice = createSlice({
       state.ticketsNum += 5;
     },
 
-    toggleFilter: (state, action: PayloadAction<CHECKBOX_ID>) => {
+    toggleFilter: (state, action: PayloadAction<CheckboxId>) => {
       handleAllCheckbox(state, action.payload);
     },
 
-    setActiveFilterTab: (state, action: PayloadAction<FILTER_ID>) => {
+    setActiveFilterTab: (state, action: PayloadAction<FilterId>) => {
       state.activeFilterTab = action.payload;
     },
 

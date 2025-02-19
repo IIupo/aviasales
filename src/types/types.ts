@@ -17,37 +17,24 @@ export interface Ticket {
     status: boolean;
     stop: boolean;
     ticketsNum: number;
-    activeFilterTab: FILTER_ID;
-    activeCheckboxes: CHECKBOX_ID[];
+    activeFilterTab: FilterId;
+    activeCheckboxes: CheckboxId[];
   }
 
-  export enum FILTER_ID {
-    ALL = 'ALL',
-    CHEAPER = 'CHEAPER',
-    FASTER = 'FASTER',
-    OPTIMAL = 'OPTIMAL',
-  }
+  export const CHECKBOX_ID = {
+    ALL: 'all',
+    NO_STOPS: 'no_stops',
+    ONE_STOP: 'one_stop',
+    TWO_STOPS: 'two_stops',
+    THREE_STOPS: 'three_stops',
+  } as const;
   
-  export enum CHECKBOX_ID {
-    ALL = 'ALL',
-    NO_STOPS = 'NO_STOPS',
-    ONE_STOP = 'ONE_STOP',
-    TWO_STOPS = 'TWO_STOPS',
-    THREE_STOPS = 'THREE_STOPS',
-  }
+  export const FILTER_ID = {
+    ALL: 'all',
+    CHEAPER: 'cheaper',
+    FASTER: 'faster',
+    OPTIMAL: 'optimal',
+  } as const;
   
-  export const FILTER_TABS_LABELS = {
-    [FILTER_ID.ALL]: 'ALL',
-    [FILTER_ID.CHEAPER]: 'Самые дешёвые',
-    [FILTER_ID.FASTER]: 'Самые быстрые',
-    [FILTER_ID.OPTIMAL]: 'Оптимальные',
-  };
-  
-  export const CHECKBOX_LABELS = {
-    [CHECKBOX_ID.ALL]: 'Все',
-    [CHECKBOX_ID.NO_STOPS]: 'Без пересадок',
-    [CHECKBOX_ID.ONE_STOP]: '1 пересадка',
-    [CHECKBOX_ID.TWO_STOPS]: '2 пересадки',
-    [CHECKBOX_ID.THREE_STOPS]: '3 пересадки',
-  };
-  
+  export type CheckboxId = typeof CHECKBOX_ID[keyof typeof CHECKBOX_ID];
+  export type FilterId = typeof FILTER_ID[keyof typeof FILTER_ID];
