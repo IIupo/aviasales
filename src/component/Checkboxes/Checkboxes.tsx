@@ -16,14 +16,14 @@ export const Checkboxes: React.FC = () => {
     <div className={styles.board}>
       <span className={styles.title}>КОЛИЧЕСТВО ПЕРЕСАДОК</span>
       {Object.values(CHECKBOX_ID).map((id) => (
-        <div key={id}>
+        <label key={id}>
           <input
             type="checkbox"
             checked={activeCheckboxes.includes(id)}
             onChange={() => handleToggle(id)}
           />
-          <label>{CHECKBOX_LABELS[id]}</label>
-        </div>
+          {CHECKBOX_LABELS[id]}
+        </label>
       ))}
     </div>
   );
