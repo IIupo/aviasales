@@ -1,7 +1,8 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setActiveFilterTab, sortByPrice, sortByDuration, sortByOptimal } from '../../store/TicketSlice';
-import { TicketsState, FILTER_ID, FilterId } from '../../types/types';
+import { FILTER_ID, FilterId } from '../../types/types';
+import { TicketsState } from '../../store/types';
 import styles from './FiltersTabs.module.css';
 
 interface FilterButton {

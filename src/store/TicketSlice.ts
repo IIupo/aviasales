@@ -1,8 +1,8 @@
 import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import { fetchSearchId, fetchTickets } from '../api/api';
-import { TicketsState, Ticket, Segment } from '../types/types';
-import { CHECKBOX_ID, CheckboxId, FilterId } from '../types/types';
-import { initialState } from './types';
+import { Ticket, Segment } from '../types/types';
+import { CHECKBOX_ID, CheckboxId, FilterId, FILTER_ID } from '../types/types';
+import { TicketsState } from './types';
 export const fetchID = createAsyncThunk('tickets/fetchSearchId', async () => {
   return await fetchSearchId();
 });
@@ -31,6 +31,16 @@ const handleAllCheckbox = (state: TicketsState, filter: CheckboxId) => {
       state.activeCheckboxes = [CHECKBOX_ID.ALL];
     }
   }
+};
+
+const initialState: TicketsState = {
+  tickets: [],
+  searchId: null,
+  status: false,
+  stop: false,
+  ticketsNum: 5,
+  activeFilterTab: FILTER_ID.CHEAPER,
+  activeCheckboxes: [CHECKBOX_ID.NO_STOPS],
 };
 
 const ticketsSlice = createSlice({

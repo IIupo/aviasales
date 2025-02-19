@@ -11,15 +11,6 @@ export interface Ticket {
     stops: string[];
     duration: number;
   }
-  export interface TicketsState {
-    tickets: Ticket[];
-    searchId: string | null;
-    status: boolean;
-    stop: boolean;
-    ticketsNum: number;
-    activeFilterTab: FilterId;
-    activeCheckboxes: CheckboxId[];
-  }
 
   export const CHECKBOX_ID = {
     ALL: 'all',

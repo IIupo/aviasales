@@ -2,7 +2,8 @@ import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { toggleFilter } from '../../store/TicketSlice';
 import styles from './Checkboxes.module.css';
-import { TicketsState, CHECKBOX_ID, CheckboxId } from '../../types/types';
+import { CHECKBOX_ID, CheckboxId } from '../../types/types';
+import { TicketsState } from '../../store/types';
 
 interface CheckboxButton {
   filter: CheckboxId;

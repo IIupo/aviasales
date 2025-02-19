@@ -3,11 +3,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Card } from '../Ticket';
 import { fetchID, fetchTicketsAsync, showMoreTicket } from '../../store/TicketSlice';
 import { FilterTabs } from '../FiltersTabs';
-import { TicketsState, CHECKBOX_ID } from '../../types/types';
+import { CHECKBOX_ID } from '../../types/types';
 import { AppDispatch } from '../../store/index';
 import styles from './Page.module.css';
 import { Spin } from 'antd';
 import { useFilter } from '../../hooks/useFilter';
+import { TicketsState } from '../../store/types';
 
 export const Page: React.FC = () => {
   const dispatch = useDispatch<AppDispatch>();
